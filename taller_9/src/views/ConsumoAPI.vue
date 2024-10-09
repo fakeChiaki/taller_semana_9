@@ -1,9 +1,5 @@
 <template>
     <section>
-      <header>
-        <h1>API Data Fetcher</h1>
-      </header>
-
       <nav>
         <ul>
           <li><button @click="handleClick(0)">Población de Países</button></li>
@@ -26,3 +22,34 @@
       </main>
     </section>
   </template>
+
+<script setup>
+  import { ref } from 'vue'
+  import axios from 'axios'
+
+  const apiData = ref(null)
+  const apiError = ref(null)
+
+  const endpoints = [
+    'https://countriesnow.space/api/v0.1/countries/population',
+    'https://api.jikan.moe/v4/recommendations/anime',
+    'https://api.jikan.moe/v4/random/anime',
+    'https://api.jikan.moe/v4/random/manga'
+  ]
+
+  const handleClick = async (endpointIndex) => {
+    resetState()
+
+    try {
+      const response = await axios.get(endpoints[endpointIndex])
+      apiData.value = response.data
+    } catch (err) {
+      apiError.value = 'Error al obtener datos: ' + err.message
+    }
+  }
+
+  const resetState = () => {
+    apiData.value = null
+    apiError.value = null
+  }
+  </script>
